@@ -34,8 +34,8 @@ if st.button("Patient abrufen"):
                     # Container und Spalten für die Profilanzeige in einzelnen Feldern
                     with st.container():
                         col1, col2 = st.columns(2)
-                        col1.markdown(f"**Vorname:** {patient.first_name}")
-                        col2.markdown(f"**Nachname:** {patient.last_name}")
+                        col1.markdown(f"**Vorname:** `{patient.first_name}`")
+                        col2.markdown(f"**Nachname:** `{patient.last_name}`")
 
                         col3, col4 = st.columns(2)
                         col3.markdown(f"**Geschlecht:** `{patient.gender}`")
