@@ -1,41 +1,52 @@
-# app.py
 import streamlit as st
 from apis.patient_api import FhirClient
 
-# Instanz des API-Clients erstellen
+# 1. Instanz des API-Clients erstellen
 fhir_client = FhirClient()
 
-st.title("FHIR - Patientenabfrage")
+# Titel mit Markdown formatieren
+st.markdown("# 🏥 FHIR - Patientenabfrage")
+st.write("Diese App fragt Patientenressourcen ab und stellt sie strukturiert dar.")
 
-# UI-Elemente für die Abfrage[cite: 1]
-patient_id = st.text_input("Bitte Patienten-ID eingeben:")
+# 2. UI-Elemente: Textfeld und Button integrieren
+patient_id = st.text_input("Bitte Patienten-ID eingeben (z.B. 591953):")
 
 if st.button("Patient abrufen"):
     if patient_id:
 
-        # 1. Ladeanimation starten
+        # 3. Ladeanimation starten
         with st.spinner(f"Lade Daten für Patient {patient_id}..."):
             try:
-                # 2. OOP: Objektorientierter Abruf
+                # OOP: Objektorientierter Abruf über die ausgelagerte API-Klasse
                 patient = fhir_client.fetch_patient(patient_id)
 
-                # 3. Erfolgsanimation abspielen
-                st.balloons()
-                st.success("Patient erfolgreich gefunden!")
+                # Status-Meldung bei Erfolg
+                st.success("Patient erfolgreich auf dem FHIR-Testserver gefunden!")
 
-                # 4. Profilanzeige aus dem Model in einzelnen Feldern[cite: 1]
-                st.subheader("Patientenprofil")
-                col1, col2 = st.columns(2)
-                col1.metric("Vorname", patient.first_name)
-                col2.metric("Nachname", patient.last_name)
+                # --- Bessere Formatierung der Ausgabe ---
 
-                col3, col4 = st.columns(2)
-                col3.write(f"**Geschlecht:** {patient.gender}")
-                col4.write(f"**Geburtsdatum:** {patient.birth_date}")
+                # Tabs für eine aufgeräumte Darstellung
+                tab1, tab2 = st.tabs(["📇 Profilübersicht", "⚙️ JSON-Rohdaten"])
 
-                st.write(f"**Logische ID:** {patient.id}")
+                with tab1:
+                    st.subheader("Persönliche Daten")
+                    st.divider()  # Optische Trennlinie
 
-                with st.expander("Rohdaten (JSON) anzeigen"):
+                    # Container und Spalten für die Profilanzeige in einzelnen Feldern
+                    with st.container():
+                        col1, col2 = st.columns(2)
+                        col1.metric("Vorname", patient.first_name)
+                        col2.metric("Nachname", patient.last_name)
+
+                        col3, col4 = st.columns(2)
+                        col3.markdown(f"**Geschlecht:** `{patient.gender}`")
+                        col4.markdown(f"**Geburtsdatum:** `{patient.birth_date}`")
+
+                        st.markdown(f"**Logische Patienten-ID:** `{patient.id}`")
+
+                with tab2:
+                    st.markdown("#### Antwort vom FHIR-Server")
+                    # Anzeigen der roh abgefragten Resource vom FHIR-Testserver
                     st.json(patient.raw_data)
 
             except ValueError as ve:
