@@ -6,10 +6,9 @@ fhir_client = FhirClient()
 
 # Titel mit Markdown formatieren
 st.markdown("# 🏥 FHIR - Patientenabfrage")
-st.write("Diese App fragt Patientenressourcen ab und stellt sie strukturiert dar.")
 
 # 2. UI-Elemente: Textfeld und Button integrieren
-patient_id = st.text_input("Bitte Patienten-ID eingeben (z.B. 591953):")
+patient_id = st.text_input("Bitte Patienten-ID eingeben:", placeholder="z.B. 591953")
 
 if st.button("Patient abrufen"):
     if patient_id:
