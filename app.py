@@ -21,7 +21,7 @@ if st.button("Patient abrufen"):
 
                 # Status-Meldung bei Erfolg
                 st.success("Patient erfolgreich auf dem FHIR-Testserver gefunden!")
-
+                st.balloons()
                 # --- Bessere Formatierung der Ausgabe ---
 
                 # Tabs für eine aufgeräumte Darstellung
