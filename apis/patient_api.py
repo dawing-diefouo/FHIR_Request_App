@@ -10,7 +10,6 @@ class FhirClient:
     def fetch_patient(self, patient_id):
         req_url = f"{self.base_url}/Patient/{patient_id}"
         response = requests.get(req_url)
-
         if response.status_code == 200:
             return PatientModel(response.json())
         elif response.status_code == 404:
