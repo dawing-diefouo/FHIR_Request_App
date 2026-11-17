@@ -1,40 +1,34 @@
 import streamlit as st
 
 
-# Diese Callback-Funktion ändert den Status, bevor die Seite neu lädt
-def switch_page(page_name):
-    st.session_state.menu = page_name
+def select_resource(resource_name):
+    st.session_state.resource = resource_name
 
 
 def render():
-    st.markdown("# 🏥 FHIR Patienten-Portal")
-    st.write("Willkommen! Über dieses Portal können Sie Patientenressourcen auf dem FHIR-Testserver verwalten.")
+    st.markdown("# 🏥 FHIR Ressourcen-Portal")
+    st.write("Wählen Sie eine FHIR-Ressource aus, um Daten vom Testserver abzurufen oder neu anzulegen.")
     st.divider()
 
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown("### 🔍 Abrufen")
-        st.write("Vorhandene Patienten über ihre logische ID auf dem Server suchen und das Patientenprofil anzeigen.")
-
-        # Aufruf der Callback-Funktion über on_click und Übergabe des Ziel-Namens über args
+        st.markdown("### 👤 Patient")
+        st.write("Stammdaten verwalten: Patienten per ID abrufen oder neue Patienten anlegen.")
         st.button(
-            "➔ Zum Abruf-Bereich",
+            "Patient öffnen ➔",
             use_container_width=True,
             type="primary",
-            on_click=switch_page,
-            args=("🔍 Patient abrufen",)
+            on_click=select_resource,
+            args=("👤 Patient",)
         )
 
     with col2:
-        st.markdown("### ➕ Erstellen")
-        st.write("Neue Patientenressourcen anlegen und strukturiert an den FHIR-Server senden.")
-
-        # Aufruf der Callback-Funktion für die Erstellen-Seite
+        st.markdown("### 📋 DiagnosticReport")
+        st.write("Klinische Befundberichte und deren Referenzen auf Patienten einsehen.")
         st.button(
-            "➔ Zum Erstellen-Bereich",
+            "DiagnosticReport öffnen ➔",
             use_container_width=True,
-            type="primary",
-            on_click=switch_page,
-            args=("➕ Patient erstellen",)
+            on_click=select_resource,
+            args=("📋 DiagnosticReport",)
         )

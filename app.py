@@ -1,28 +1,35 @@
 import streamlit as st
 from apis.patient_api import FhirClient
-from views import home, retrieve_patient, create_patient
+from views import home
+from views.patient import patient_hub
 
-st.set_page_config(page_title="FHIR Patienten-Portal", page_icon="🏥", layout="centered")
+st.set_page_config(page_title="FHIR Explorer", page_icon="🏥", layout="centered")
 
-# 1. Session State initialisieren, falls er noch nicht existiert
-if 'menu' not in st.session_state:
-    st.session_state.menu = "🏠 Startseite"
+if "resource" not in st.session_state:
+    st.session_state.resource = "🏠 Startseite"
 
-fhir_client = FhirClient()
+patient_api = FhirClient()
 
+# Hauptmenü: Ressourcen als Items
 with st.sidebar:
-    st.title("Navigation")
-    # 2. Key="menu" verknüpft die Auswahl direkt mit dem Session State
+    st.title("FHIR Ressourcen")
     st.radio(
-        "Aktion wählen:",
-        ["🏠 Startseite", "🔍 Patient abrufen", "➕ Patient erstellen"],
-        key="menu"
+        "Ressource auswählen:",
+        ["🏠 Startseite", "👤 Patient", "📋 DiagnosticReport", "🔬 Observation"],
+        key="resource"
     )
 
-# 3. Routing über den Session State steuern
-if st.session_state.menu == "🏠 Startseite":
+# Routing auf Ressource-Ebene
+if st.session_state.resource == "🏠 Startseite":
     home.render()
-elif st.session_state.menu == "🔍 Patient abrufen":
-    retrieve_patient.render(fhir_client)
-elif st.session_state.menu == "➕ Patient erstellen":
-    create_patient.render(fhir_client)
+
+elif st.session_state.resource == "👤 Patient":
+    patient_hub.render(patient_api)
+
+elif st.session_state.resource == "📋 DiagnosticReport":
+    st.markdown("# 📋 Ressource: DiagnosticReport")
+    st.info("Platzhalter: Hier können künftig Befundberichte abgerufen oder erstellt werden.")
+
+elif st.session_state.resource == "🔬 Observation":
+    st.markdown("# 🔬 Ressource: Observation")
+    st.info("Platzhalter: Hier können künftig Messwerte und Beobachtungen verwaltet werden.")
