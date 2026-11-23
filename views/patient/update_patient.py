@@ -11,7 +11,7 @@ GENDER_MAP = {
 REVERSE_GENDER_MAP = {v: k for k, v in GENDER_MAP.items()}
 
 def render(fhir_client):
-    st.markdown("### Bestehenden Patienten aktualisieren (`PUT`)")
+    st.markdown("### Bestehenden Patienten aktualisieren ")
     st.write("Laden Sie zuerst den Patienten über seine logische ID, um die aktuellen Daten zu bearbeiten.")
 
     col_id, col_btn = st.columns([3, 1])
