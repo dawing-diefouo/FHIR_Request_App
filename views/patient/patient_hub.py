@@ -1,19 +1,29 @@
 import streamlit as st
-from views.patient import retrieve_patient, create_patient
-
+from views.patient import retrieve_patient, create_patient, update_patient, delete_patient
 
 def render(patient_api):
     st.markdown("# 👤 Ressource: Patient")
-    st.write("Wählen Sie eine Aktion für die Patienten-Ressource auf dem FHIR-Testserver.")
+    st.write("Verwalten Sie Patientenressourcen auf dem FHIR-Testserver (CRUD).")
 
-    # Aktionen innerhalb der Ressource
-    tab_retrieve, tab_create = st.tabs([
-        "🔍 Patient abrufen (GET)",
-        "➕ Patient erstellen (POST)"
-    ])
+    aktion = st.segmented_control(
+        "Aktion wählen:",
+        options=[
+            "🔍 Abrufen (GET)",
+            "➕ Erstellen (POST)",
+            "✏️ Aktualisieren (PUT)",
+            "🗑️ Löschen (DELETE)"
+        ],
+        default="🔍 Abrufen (GET)",
+        label_visibility="collapsed"
+    )
 
-    with tab_retrieve:
+    st.divider()
+
+    if aktion == "🔍 Abrufen (GET)":
         retrieve_patient.render(patient_api)
-
-    with tab_create:
+    elif aktion == "➕ Erstellen (POST)":
         create_patient.render(patient_api)
+    elif aktion == "✏️ Aktualisieren (PUT)":
+        update_patient.render(patient_api)
+    elif aktion == "🗑️ Löschen (DELETE)":
+        delete_patient.render(patient_api)
