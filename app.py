@@ -3,8 +3,24 @@ from apis.patient_api import FhirClient
 from views import home
 from views.patient import patient_hub
 
-# Tipp: Falls Menü-Texte bei schmalen Fenstern umbrechen, layout="wide" verwenden
-st.set_page_config(page_title="FHIR Explorer", page_icon="🏥", layout="centered")
+st.set_page_config(page_title="FHIR Explorer", page_icon="🏥", layout="wide")
+
+# Oberen Standard-Abstand etwas verringern, damit die Menüs kompakt oben sitzen
+st.markdown(
+    """
+    <style>
+        .block-container {
+            padding-top: 2.8rem;
+            padding-bottom: 0.5rem;
+        }
+        hr {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 if "resource" not in st.session_state:
     st.session_state.resource = "🏠 Startseite"
@@ -21,7 +37,7 @@ MENU_ITEMS = [
     "🔬 Observation",
 ]
 
-# Horizontale Top-Navigation
+# --- Festes Hauptmenü ---
 nav_cols = st.columns(len(MENU_ITEMS))
 for col, item in zip(nav_cols, MENU_ITEMS):
     is_active = st.session_state.resource == item
@@ -37,14 +53,18 @@ for col, item in zip(nav_cols, MENU_ITEMS):
 
 st.divider()
 
-# Routing auf Ressourcen-Ebene
-if st.session_state.resource == "🏠 Startseite":
-    home.render()
-elif st.session_state.resource == "👤 Patient":
+# --- Routing ---
+if st.session_state.resource == "👤 Patient":
+    # Patient-Hub verwaltet sein eigenes festes Untermenü + Scroll-Bereich
     patient_hub.render(patient_api)
-elif st.session_state.resource == "📋 DiagnosticReport":
-    st.markdown("# 📋 Ressource: DiagnosticReport")
-    st.info("Platzhalter für Befundberichte.")
-elif st.session_state.resource == "🔬 Observation":
-    st.markdown("# 🔬 Ressource: Observation")
-    st.info("Platzhalter für Messwerte.")
+else:
+    # Alle übrigen Seiten in einem eigenen Scroll-Bereich rendern
+    with st.container(height=620, border=False):
+        if st.session_state.resource == "🏠 Startseite":
+            home.render()
+        elif st.session_state.resource == "📋 DiagnosticReport":
+            st.markdown("## 📋 Ressource: DiagnosticReport")
+            st.info("Platzhalter für Befundberichte.")
+        elif st.session_state.resource == "🔬 Observation":
+            st.markdown("## 🔬 Ressource: Observation")
+            st.info("Platzhalter für Messwerte.")
